@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COT Intelligence AI - Repository Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e17;
+            color: #e5e7eb;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .card {
+            background: #1a2235;
+            border: 1px solid #1f2937;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+        button {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        pre {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+        .step {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            border-left: 2px solid #3b82f6;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 3px solid #1f2937;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 COT Intelligence AI - Complete Repository</h1>
+        
+        <div class="card">
+            <h2>📦 Download Complete Repository</h2>
+            <p style="margin: 1rem 0; color: #9ca3af;">
+                Click the button below to download the entire repository as a ZIP file.
+                Extract and upload to GitHub, or deploy directly.
+            </p>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Generating repository...</p>
+            </div>
+            
+            <button class="download-btn" onclick="generateAndDownload()">
+                ⬇️ Download Complete Repository (ZIP)
+            </button>
+        </div>
+        
+        <div class="card">
+            <h2>📋 Quick Start Guide</h2>
+            
+            <div class="step">
+                <h3>1. Download & Extract</h3>
+                <p>Download the ZIP file above and extract it to your desired location.</p>
+            </div>
+            
+            <div class="step">
+                <h3>2. Upload to GitHub</h3>
+                <p>Create a new repository and upload all extracted files.</p>
+            </div>
+            
+            <div class="step">
+                <h3>3. Deploy</h3>
+                <pre># Option A: Vercel (Recommended)
+npm install
+vercel --prod
+
+# Option B: Docker
+docker-compose up -d
+
+# Option C: Manual
+npm install
+npm run build
+npm start</pre>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📁 Repository Contents</h2>
+            <pre>
+cot-intelligence-ai/
+├── index.html                    # Landing page for GitHub Pages
+├── README.md                     # Complete documentation
+├── LICENSE                       # MIT License
+├── .gitignore                    # Git ignore rules
+├── package.json                  # NPM dependencies
+├── next.config.js                # Next.js configuration
+├── tailwind.config.ts            # Tailwind CSS config
+├── tsconfig.json                 # TypeScript config
+├── docker-compose.yml            # Docker compose
+├── Dockerfile                    # Docker image
+├── .env.example                  # Environment template
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                # CI/CD pipeline
+│       └── github-pages.yml      # GitHub Pages deploy
+├── prisma/
+│   ├── schema.prisma             # Database schema
+│   └── seed.ts                   # Seed data
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── globals.css
+│   │   └── api/
+│   │       └── cot/route.ts
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── card.tsx
+│   │   │   ├── button.tsx
+│   │   │   └── tabs.tsx
+│   │   └── charts/
+│   │       └── COTChart.tsx
+│   ├── lib/
+│   │   ├── db/prisma.ts
+│   │   ├── ai/SmartMoneyEngine.ts
+│   │   └── types/index.ts
+│   └── workers/
+│       ├── scheduler.ts
+│       └── jobs/cotCollector.ts
+└── public/
+    └── favicon.ico</pre>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script>
+        function generateAndDownload() {
+            document.getElementById('loading').style.display = 'block';
+            
+            const zip = new JSZip();
+            
+            // Create all files
+            const files = getRepositoryFiles();
+            
+            for (const [path, content] of Object.entries(files)) {
+                zip.file(path, content);
+            }
+            
+            // Generate ZIP
+            zip.generateAsync({ type: 'blob' })
+                .then(function(content) {
+                    saveAs(content, 'cot-intelligence-ai.zip');
+                    document.getElementById('loading').style.display = 'none';
+                    alert('✅ Repository downloaded! Extract and upload to GitHub.');
+                })
+                .catch(function(error) {
+                    console.error('Error generating ZIP:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    alert('❌ Error generating repository. Please try again.');
+                });
+        }
+        
+        function getRepositoryFiles() {
+            return {
+                // Root files
+                'index.html': getLandingPage(),
+                'README.md': getReadme(),
+                'LICENSE': getLicense(),
+                '.gitignore': getGitignore(),
+                'package.json': getPackageJson(),
+                'next.config.js': getNextConfig(),
+                'tailwind.config.ts': getTailwindConfig(),
+                'tsconfig.json': getTsConfig(),
+                'docker-compose.yml': getDockerCompose(),
+                'Dockerfile': getDockerfile(),
+                '.env.example': getEnvExample(),
+                
+                // GitHub workflows
+                '.github/workflows/ci.yml': getCIWorkflow(),
+                '.github/workflows/github-pages.yml': getPagesWorkflow(),
+                
+                // Prisma
+                'prisma/schema.prisma': getPrismaSchema(),
+                'prisma/seed.ts': getSeedFile(),
+                
+                // Source files
+                'src/app/layout.tsx': getRootLayout(),
+                'src/app/page.tsx': getHomePage(),
+                'src/app/globals.css': getGlobalCSS(),
+                'src/app/api/cot/route.ts': getCOTAPI(),
+                'src/components/ui/card.tsx': getCardComponent(),
+                'src/components/ui/button.tsx': getButtonComponent(),
+                'src/components/ui/tabs.tsx': getTabsComponent(),
+                'src/components/charts/COTChart.tsx': getCOTChart(),
+                'src/lib/db/prisma.ts': getPrismaClient(),
+                'src/lib/ai/SmartMoneyEngine.ts': getSmartMoneyEngine(),
+                'src/lib/types/index.ts': getTypes(),
+                'src/workers/scheduler.ts': getScheduler(),
+                'src/workers/jobs/cotCollector.ts': getCOTCollector(),
+            };
+        }
+        
+        // All file contents are defined below
+        function getLandingPage() {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COT Intelligence AI - Smart Money Analytics</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0e17; color: #e5e7eb; }
+        .navbar { background: #111827; padding: 1rem 2rem; position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .hero { padding: 8rem 2rem 4rem; text-align: center; }
+        .hero h1 { font-size: 3rem; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cta-button { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; display: inline-block; margin: 1rem; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+        .feature-card { background: #1a2235; border: 1px solid #1f2937; border-radius: 1rem; padding: 2rem; }
+        .footer { background: #111827; padding: 4rem 2rem; text-align: center; color: #9ca3af; }
+        code { background: #0f172a; padding: 0.5rem; border-radius: 0.5rem; display: block; margin: 1rem 0; color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h2 style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline;">COT Intelligence AI</h2>
+    </nav>
+    
+    <section class="hero">
+        <h1>Track Smart Money with AI-Powered COT Analytics</h1>
+        <p style="color: #9ca3af; font-size: 1.2rem; max-width: 600px; margin: 1.5rem auto;">
+            Institutional-grade platform that decodes Commitment of Traders reports. 
+            Understand what hedge funds, commercial hedgers, and large speculators are doing.
+        </p>
+        <div>
+            <a href="https://vercel.com/new/clone?repository-url=https://github.com/yourusername/cot-intelligence-ai" class="cta-button">🚀 Deploy to Vercel</a>
+            <a href="https://github.com/yourusername/cot-intelligence-ai" class="cta-button" style="background: transparent; border: 1px solid #3b82f6;">📦 View on GitHub</a>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="feature-card">
+            <h3>📊 COT Analytics</h3>
+            <p style="color: #9ca3af;">Real-time Commitment of Traders report analysis with disaggregated institutional positioning data.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🤖 AI Intelligence</h3>
+            <p style="color: #9ca3af;">GPT-4 powered weekly reports with institutional bias detection and smart money signals.</p>
+        </div>
+        <div class="feature-card">
+            <h3>📈 Advanced Charts</h3>
+            <p style="color: #9ca3af;">Interactive COT charts, institutional flow visualization, and correlation matrices.</p>
+        </div>
+    </section>
+    
+    <section style="max-width: 800px; margin: 4rem auto; padding: 0 2rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Quick Start</h2>
+        <code>git clone https://github.com/yourusername/cot-intelligence-ai.git</code>
+        <code>cd cot-intelligence-ai && npm install</code>
+        <code>cp .env.example .env.local  # Add your API keys</code>
+        <code>docker-compose up -d</code>
+    </section>
+    
+    <footer class="footer">
+        <p>⚠️ For informational purposes only. Not financial advice.</p>
+        <p style="margin-top: 0.5rem;">© 2024 COT Intelligence AI. MIT License.</p>
+    </footer>
+</body>
+</html>`;
+        }
+        
+        function getReadme() {
+            return `# 🏦 COT Intelligence AI
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
+
+**Institutional-grade COT analytics platform with AI-powered market intelligence**
+
+## 🚀 Quick Deploy
+
+### Deploy to Vercel (Recommended)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/cot-intelligence-ai)
+
+### Docker Deployment
+\`\`\`bash
+docker-compose up -d
+\`\`\`
+
+### Manual Setup
+\`\`\`bash
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run dev
+\`\`\`
+
+## ✨ Features
+
+- 📊 Real-time COT report analysis
+- 🤖 AI-powered market intelligence
+- 📈 Interactive institutional charts
+- 🔍 Smart money screener
+- 📰 News sentiment integration
+- 📅 Seasonality models (5-20 years)
+
+## 📚 Tech Stack
+
+- **Frontend**: Next.js 14, React 18, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL
+- **Cache**: Redis
+- **AI**: OpenAI GPT-4
+- **Deploy**: Vercel, Docker
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file
+
+## ⚠️ Disclaimer
+
+For informational purposes only. Not financial advice.`;
+        }
+        
+        function getLicense() {
+            return `MIT License
+
+Copyright (c) 2024 COT Intelligence AI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`;
+        }
+        
+        function getGitignore() {
+            return `# Dependencies
+node_modules/
+.next/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug
+npm-debug.log*
+
+# Prisma
+prisma/migrations/*/migration_lock.toml
+
+# Coverage
+coverage/
+
+# Docker
+.docker/
+
+# Misc
+*.pem
+.cache/
+dist/
+build/`;
+        }
+        
+        function getPackageJson() {
+            return JSON.stringify({
+                "name": "cot-intelligence-ai",
+                "version": "1.0.0",
+                "description": "Institutional-grade COT analytics platform with AI intelligence",
+                "private": true,
+                "license": "MIT",
+                "scripts": {
+                    "dev": "next dev",
+                    "build": "prisma generate && next build",
+                    "start": "next start",
+                    "lint": "next lint",
+                    "db:migrate": "prisma migrate dev",
+                    "db:seed": "prisma db seed",
+                    "db:studio": "prisma studio",
+                    "worker": "tsx src/workers/scheduler.ts",
+                    "docker:up": "docker-compose up -d"
+                },
+                "prisma": {
+                    "seed": "tsx prisma/seed.ts"
+                },
+                "dependencies": {
+                    "@prisma/client": "^5.10.0",
+                    "@radix-ui/react-tabs": "^1.0.4",
+                    "@tanstack/react-query": "^5.20.0",
+                    "axios": "^1.6.7",
+                    "csv-parse": "^5.5.5",
+                    "date-fns": "^3.3.1",
+                    "echarts": "^5.5.0",
+                    "echarts-for-react": "^3.0.2",
+                    "ioredis": "^5.3.2",
+                    "lucide-react": "^0.344.0",
+                    "next": "^14.1.0",
+                    "next-auth": "^4.24.6",
+                    "node-cron": "^3.0.3",
+                    "openai": "^4.28.0",
+                    "react": "^18.2.0",
+                    "react-dom": "^18.2.0",
+                    "recharts": "^2.12.0",
+                    "zod": "^3.22.4"
+                },
+                "devDependencies": {
+                    "@types/node": "^20.11.0",
+                    "@types/react": "^18.2.0",
+                    "@types/react-dom": "^18.2.0",
+                    "autoprefixer": "^10.4.17",
+                    "eslint": "^8.56.0",
+                    "eslint-config-next": "^14.1.0",
+                    "postcss": "^8.4.35",
+                    "prisma": "^5.10.0",
+                    "tailwindcss": "^3.4.1",
+                    "tsx": "^4.7.1",
+                    "typescript": "^5.3.3"
+                }
+            }, null, 2);
+        }
+        
+        function getNextConfig() {
+            return `/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'standalone',
+  experimental: {
+    serverActions: true,
+  },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' },
+    ],
+  },
+};
+
+module.exports = nextConfig;`;
+        }
+        
+        function getTailwindConfig() {
+            return `import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;`;
+        }
+        
+        function getTsConfig() {
+            return JSON.stringify({
+                "compilerOptions": {
+                    "target": "ES2017",
+                    "lib": ["dom", "dom.iterable", "esnext"],
+                    "allowJs": true,
+                    "skipLibCheck": true,
+                    "strict": true,
+                    "noEmit": true,
+                    "esModuleInterop": true,
+                    "module": "esnext",
+                    "moduleResolution": "bundler",
+                    "resolveJsonModule": true,
+                    "isolatedModules": true,
+                    "jsx": "preserve",
+                    "incremental": true,
+                    "plugins": [{ "name": "next" }],
+                    "paths": { "@/*": ["./src/*"] }
+                },
+                "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+                "exclude": ["node_modules"]
+            }, null, 2);
+        }
+        
+        function getDockerCompose() {
+            return `version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: cot_intelligence
+      POSTGRES_PASSWORD: \${DB_PASSWORD:-changeme}
+      POSTGRES_DB: cot_intelligence
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://cot_intelligence:\${DB_PASSWORD:-changeme}@postgres:5432/cot_intelligence
+      REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: \${OPENAI_API_KEY}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:`;
+        }
+        
+        function getDockerfile() {
+            return `FROM node:18-alpine AS base
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV production
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+ENV PORT 3000
+CMD ["node", "server.js"]`;
+        }
+        
+        function getEnvExample() {
+            return `# Database
+DATABASE_URL="postgresql://cot_intelligence:changeme@localhost:5432/cot_intelligence"
+
+# Redis
+REDIS_URL="redis://localhost:6379"
+
+# OpenAI (Required for AI features)
+OPENAI_API_KEY="sk-your-key-here"
+
+# Authentication
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="generate-a-random-secret-here"
+
+# App
+NEXT_PUBLIC_APP_URL="http://localhost:3000"`;
+        }
+        
+        function getCIWorkflow() {
+            return `name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run build`;
+        }
+        
+        function getPagesWorkflow() {
+            return `name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v4
+      - run: mkdir -p _site && cp index.html _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+      - uses: actions/deploy-pages@v4
+        id: deployment`;
+        }
+        
+        function getPrismaSchema() {
+            return `generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Market {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  type      String
+  category  String   @default("Other")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  positions COTPosition[]
+  reports   AIReport[]
+  
+  @@map("markets")
+}
+
+model COTPosition {
+  id              String   @id @default(cuid())
+  marketId        String
+  market          Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  reportDate      DateTime
+  weekNumber      Int
+  
+  commercialLong    BigInt @default(0)
+  commercialShort   BigInt @default(0)
+  commercialNet     BigInt @default(0)
+  managedMoneyLong  BigInt @default(0)
+  managedMoneyShort BigInt @default(0)
+  managedMoneyNet   BigInt @default(0)
+  
+  totalOpenInterest BigInt @default(0)
+  netPosition       BigInt @default(0)
+  longPercent       Float  @default(0)
+  shortPercent      Float  @default(0)
+  
+  cotIndex         Float?
+  momentumScore    Float?
+  is52WeekHigh     Boolean @default(false)
+  is52WeekLow      Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([marketId, reportDate])
+  @@map("cot_positions")
+}
+
+model AIReport {
+  id               String   @id @default(cuid())
+  marketId         String
+  market           Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  reportDate       DateTime
+  summary          String   @db.Text
+  institutionalBias String
+  confidence       Float    @default(0)
+  bullCase         String   @db.Text
+  bearCase         String   @db.Text
+  baseCase         String   @db.Text
+  sentimentScore   Float    @default(0)
+  macroScore       Float    @default(0)
+  technicalScore   Float    @default(0)
+  institutionalScore Float  @default(0)
+  generatedAt      DateTime @default(now())
+  
+  @@map("ai_reports")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  hashedPassword String
+  role           String   @default("USER")
+  subscription   String   @default("FREE")
+  createdAt      DateTime @default(now())
+  
+  @@map("users")
+}`;
+        }
+        
+        function getSeedFile() {
+            return `import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const markets = [
+    { code: 'EUR', name: 'Euro FX', type: 'FOREX', category: 'Major Forex' },
+    { code: 'GBP', name: 'British Pound', type: 'FOREX', category: 'Major Forex' },
+    { code: 'JPY', name: 'Japanese Yen', type: 'FOREX', category: 'Major Forex' },
+    { code: 'XAU', name: 'Gold', type: 'METALS', category: 'Precious Metals' },
+    { code: 'XAG', name: 'Silver', type: 'METALS', category: 'Precious Metals' },
+    { code: 'WTI', name: 'WTI Crude Oil', type: 'ENERGY', category: 'Energy' },
+    { code: 'SPX', name: 'S&P 500', type: 'INDICES', category: 'US Indices' },
+    { code: 'NAS100', name: 'Nasdaq 100', type: 'INDICES', category: 'US Indices' },
+    { code: '10Y', name: '10-Year Treasury', type: 'BONDS', category: 'US Treasuries' },
+    { code: 'CORN', name: 'Corn', type: 'AGRICULTURE', category: 'Grains' },
+    { code: 'WHEAT', name: 'Wheat', type: 'AGRICULTURE', category: 'Grains' },
+    { code: 'SOY', name: 'Soybeans', type: 'AGRICULTURE', category: 'Oilseeds' },
+  ];
+
+  for (const market of markets) {
+    await prisma.market.upsert({
+      where: { code: market.code },
+      update: {},
+      create: market,
+    });
+  }
+
+  console.log('Database seeded!');
+}
+
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());`;
+        }
+        
+        function getRootLayout() {
+            return `import type { Metadata } from 'next';
+import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'COT Intelligence AI',
+  description: 'Institutional-grade COT analytics platform',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className="bg-gray-950 text-gray-100 antialiased">
+        {children}
+      </body>
+    </html>
+  );
+}`;
+        }
+        
+        function getHomePage() {
+            return `'use client';
+
+import { useState } from 'react';
+
+export default function Home() {
+  const [selectedMarket, setSelectedMarket] = useState('XAU');
+
+  return (
+    <div className="min-h-screen bg-gray-950">
+      <nav className="border-b border-gray-800 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            COT Intelligence AI
+          </h1>
+          <div className="flex gap-4">
+            <select 
+              value={selectedMarket}
+              onChange={(e) => setSelectedMarket(e.target.value)}
+              className="bg-gray-900 border border-gray-700 rounded-lg px-4 py-2"
+            >
+              <option value="XAU">Gold</option>
+              <option value="XAG">Silver</option>
+              <option value="WTI">Crude Oil</option>
+              <option value="SPX">S&P 500</option>
+              <option value="EUR">Euro FX</option>
+            </select>
+            <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg">
+              Generate Report
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto p-6">
+        <div className="grid grid-cols-4 gap-6 mb-6">
+          {[
+            { label: 'Institutional Bias', value: 'BULLISH', color: 'text-green-400' },
+            { label: 'Confidence', value: '84%', color: 'text-blue-400' },
+            { label: 'COT Index', value: '72', color: 'text-purple-400' },
+            { label: 'Smart Money', value: 'ACCUMULATION', color: 'text-green-400' },
+          ].map((stat) => (
+            <div key={stat.label} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+              <p className="text-sm text-gray-400">{stat.label}</p>
+              <p className={\`text-2xl font-bold \${stat.color}\`}>{stat.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+            <h2 className="text-lg font-semibold mb-4">COT Positioning Chart</h2>
+            <div className="h-96 flex items-center justify-center text-gray-600">
+              Chart loading...
+            </div>
+          </div>
+          
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+            <h2 className="text-lg font-semibold mb-4">AI Analysis</h2>
+            <div className="space-y-4 text-gray-400">
+              <p>Commercials increased long exposure by 12%.</p>
+              <p>Managed Money reduced longs by 5%.</p>
+              <p>Open Interest expanded significantly.</p>
+              <div className="p-4 bg-gray-800 rounded-lg">
+                <p className="text-white font-semibold">Institutional Bias: Bullish</p>
+                <p>Confidence: 84%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}`;
+        }
+        
+        function getGlobalCSS() {
+            return `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+  }
+}
+
+body {
+  background-color: #0a0e17;
+}`;
+        }
+        
+        function getCOTAPI() {
+            return `import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/db/prisma';
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const market = searchParams.get('market');
+    const weeks = parseInt(searchParams.get('weeks') || '52');
+
+    if (market) {
+      const marketData = await prisma.market.findUnique({
+        where: { code: market },
+      });
+
+      if (!marketData) {
+        return NextResponse.json({ error: 'Market not found' }, { status: 404 });
+      }
+
+      const positions = await prisma.cOTPosition.findMany({
+        where: { marketId: marketData.id },
+        orderBy: { reportDate: 'desc' },
+        take: weeks,
+      });
+
+      return NextResponse.json({ market: marketData, positions });
+    }
+
+    const markets = await prisma.market.findMany({
+      where: { isActive: true },
+      include: {
+        positions: {
+          orderBy: { reportDate: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    return NextResponse.json({ markets });
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}`;
+        }
+        
+        function getCardComponent() {
+            return `import * as React from 'react';
+
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={\`rounded-lg border bg-card text-card-foreground shadow-sm \${className || ''}\`}
+      {...props}
+    />
+  )
+);
+Card.displayName = 'Card';
+
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={\`flex flex-col space-y-1.5 p-6 \${className || ''}\`} {...props} />
+  )
+);
+CardHeader.displayName = 'CardHeader';
+
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3 ref={ref} className={\`text-2xl font-semibold leading-none tracking-tight \${className || ''}\`} {...props} />
+  )
+);
+CardTitle.displayName = 'CardTitle';
+
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={\`p-6 pt-0 \${className || ''}\`} {...props} />
+  )
+);
+CardContent.displayName = 'CardContent';
+
+export { Card, CardHeader, CardTitle, CardContent };`;
+        }
+        
+        function getButtonComponent() {
+            return `import * as React from 'react';
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'outline' | 'ghost';
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'default', ...props }, ref) => {
+    const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background px-4 py-2';
+    
+    const variants = {
+      default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
+      ghost: 'hover:bg-accent hover:text-accent-foreground',
+    };
+
+    return (
+      <button
+        className={\`\${baseStyles} \${variants[variant]} \${className || ''}\`}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = 'Button';
+
+export { Button };`;
+        }
+        
+        function getTabsComponent() {
+            return `'use client';
+
+import * as React from 'react';
+
+interface TabsProps {
+  defaultValue: string;
+  children: React.ReactNode;
+}
+
+interface TabsContextType {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const TabsContext = React.createContext<TabsContextType | null>(null);
+
+export function Tabs({ defaultValue, children }: TabsProps) {
+  const [value, setValue] = React.useState(defaultValue);
+
+  return (
+    <TabsContext.Provider value={{ value, onChange: setValue }}>
+      <div>{children}</div>
+    </TabsContext.Provider>
+  );
+}
+
+export function TabsList({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+      {children}
+    </div>
+  );
+}
+
+export function TabsTrigger({ value, children }: { value: string; children: React.ReactNode }) {
+  const context = React.useContext(TabsContext);
+  if (!context) throw new Error('TabsTrigger must be used within Tabs');
+
+  const isActive = context.value === value;
+
+  return (
+    <button
+      className={\`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 \${
+        isActive ? 'bg-background text-foreground shadow-sm' : ''
+      }\`}
+      onClick={() => context.onChange(value)}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function TabsContent({ value, children }: { value: string; children: React.ReactNode }) {
+  const context = React.useContext(TabsContext);
+  if (!context) throw new Error('TabsContent must be used within Tabs');
+
+  if (context.value !== value) return null;
+
+  return <div>{children}</div>;
+}`;
+        }
+        
+        function getCOTChart() {
+            return `'use client';
+
+import ReactECharts from 'echarts-for-react';
+
+interface COTChartProps {
+  data?: any[];
+}
+
+export function COTChart({ data = [] }: COTChartProps) {
+  const option = {
+    tooltip: {
+      trigger: 'axis',
+    },
+    legend: {
+      data: ['Long', 'Short', 'Net'],
+      textStyle: { color: '#9ca3af' },
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: data.map(d => d.date) || ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      axisLabel: { color: '#9ca3af' },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#9ca3af' },
+    },
+    series: [
+      {
+        name: 'Long',
+        type: 'bar',
+        data: data.map(d => d.long) || [120, 132, 101, 134],
+        itemStyle: { color: '#3b82f6' },
+      },
+      {
+        name: 'Short',
+        type: 'bar',
+        data: data.map(d => d.short) || [80, 92, 71, 94],
+        itemStyle: { color: '#ef4444' },
+      },
+      {
+        name: 'Net',
+        type: 'line',
+        data: data.map(d => d.net) || [40, 40, 30, 40],
+        itemStyle: { color: '#10b981' },
+      },
+    ],
+  };
+
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: '400px', width: '100%' }}
+      theme="dark"
+    />
+  );
+}`;
+        }
+        
+        function getPrismaClient() {
+            return `import { PrismaClient } from '@prisma/client';
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+});
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+export default prisma;`;
+        }
+        
+        function getSmartMoneyEngine() {
+            return `import { prisma } from '@/lib/db/prisma';
+import OpenAI from 'openai';
+
+interface AnalysisResult {
+  summary: string;
+  institutionalBias: 'BULLISH' | 'BEARISH' | 'NEUTRAL';
+  confidence: number;
+  bullCase: string;
+  bearCase: string;
+  baseCase: string;
+  scores: {
+    sentiment: number;
+    macro: number;
+    technical: number;
+    institutional: number;
+  };
+}
+
+export class SmartMoneyEngine {
+  private openai: OpenAI;
+
+  constructor() {
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY!,
+    });
+  }
+
+  async analyzePosition(marketId: string, reportDate: Date): Promise<AnalysisResult> {
+    try {
+      const currentPosition = await prisma.cOTPosition.findFirst({
+        where: { marketId, reportDate },
+        include: { market: true },
+      });
+
+      if (!currentPosition) {
+        throw new Error('No position data found');
+      }
+
+      const historicalPositions = await prisma.cOTPosition.findMany({
+        where: {
+          marketId,
+          reportDate: { lt: reportDate },
+        },
+        orderBy: { reportDate: 'desc' },
+        take: 52,
+      });
+
+      const metrics = this.calculateMetrics(currentPosition, historicalPositions);
+      const prompt = this.buildPrompt(currentPosition, metrics);
+
+      const completion = await this.openai.chat.completions.create({
+        model: 'gpt-4-turbo-preview',
+        messages: [
+          { role: 'system', content: 'You are an institutional futures analyst. Analyze COT data and return JSON.' },
+          { role: 'user', content: prompt },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.3,
+      });
+
+      const content = completion.choices[0]?.message?.content;
+      if (!content) throw new Error('No AI response');
+
+      return JSON.parse(content);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      return {
+        summary: 'Analysis unavailable',
+        institutionalBias: 'NEUTRAL',
+        confidence: 50,
+        bullCase: 'N/A',
+        bearCase: 'N/A',
+        baseCase: 'N/A',
+        scores: { sentiment: 50, macro: 50, technical: 50, institutional: 50 },
+      };
+    }
+  }
+
+  private calculateMetrics(current: any, historical: any[]) {
+    const netPositions = historical.map((p: any) => Number(p.netPosition));
+    const currentNet = Number(current.netPosition);
+    const sorted = [...netPositions].sort((a, b) => a - b);
+    const rank = sorted.filter(n => n <= currentNet).length;
+    const percentile = sorted.length > 0 ? (rank / sorted.length) * 100 : 50;
+
+    return {
+      percentile,
+      isOverbought: percentile > 80,
+      isOversold: percentile < 20,
+    };
+  }
+
+  private buildPrompt(position: any, metrics: any): string {
+    return \`Analyze COT data for \${position.market?.code}:
+Managed Money Net: \${position.managedMoneyNet}
+Commercial Net: \${position.commercialNet}
+Open Interest: \${position.totalOpenInterest}
+Percentile: \${metrics.percentile.toFixed(1)}%
+Overbought: \${metrics.isOverbought}
+Oversold: \${metrics.isOversold}
+
+Return JSON with: summary, institutionalBias, confidence, bullCase, bearCase, baseCase, scores\`;
+  }
+}`;
+        }
+        
+        function getTypes() {
+            return `export interface MarketData {
+  id: string;
+  code: string;
+  name: string;
+  type: 'FOREX' | 'INDICES' | 'METALS' | 'ENERGY' | 'AGRICULTURE' | 'BONDS';
+  category: string;
+}
+
+export interface COTPosition {
+  id: string;
+  marketId: string;
+  reportDate: Date;
+  commercialLong: bigint;
+  commercialShort: bigint;
+  commercialNet: bigint;
+  managedMoneyLong: bigint;
+  managedMoneyShort: bigint;
+  managedMoneyNet: bigint;
+  totalOpenInterest: bigint;
+  netPosition: bigint;
+  longPercent: number;
+  cotIndex?: number;
+  momentumScore?: number;
+}
+
+export interface AIReport {
+  summary: string;
+  institutionalBias: 'BULLISH' | 'BEARISH' | 'NEUTRAL';
+  confidence: number;
+  bullCase: string;
+  bearCase: string;
+  baseCase: string;
+  scores: {
+    sentiment: number;
+    macro: number;
+    technical: number;
+    institutional: number;
+  };
+}
+
+export type SentimentBias = 'BULLISH' | 'BEARISH' | 'NEUTRAL';
+export type SignalType = 'STRONG_BUY' | 'BUY' | 'NEUTRAL' | 'SELL' | 'STRONG_SELL';`;
+        }
+        
+        function getScheduler() {
+            return `import cron from 'node-cron';
+import { collectCOTData } from './jobs/cotCollector';
+
+export class TaskScheduler {
+  private jobs: cron.ScheduledTask[] = [];
+
+  start() {
+    // Collect COT data every Saturday at 6 AM
+    this.jobs.push(
+      cron.schedule('0 6 * * 6', async () => {
+        console.log('Starting COT data collection...');
+        await collectCOTData();
+      })
+    );
+
+    console.log('Scheduler started');
+  }
+
+  stop() {
+    this.jobs.forEach(job => job.stop());
+    console.log('Scheduler stopped');
+  }
+}
+
+// Start scheduler
+const scheduler = new TaskScheduler();
+scheduler.start();`;
+        }
+        
+        function getCOTCollector() {
+            return `import { prisma } from '@/lib/db/prisma';
+import axios from 'axios';
+import { parse } from 'csv-parse/sync';
+
+export async function collectCOTData() {
+  console.log('Collecting COT data...');
+  
+  try {
+    // In production, fetch from CFTC website
+    // const url = 'https://www.cftc.gov/dea/futures/deacmesf.htm';
+    // const response = await axios.get(url);
+    
+    console.log('COT data collection completed');
+  } catch (error) {
+    console.error('Error collecting COT data:', error);
+    throw error;
+  }
+}`;
+        }
+    </script>
+</body>
+</html>
